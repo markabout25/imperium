@@ -1,1025 +1,1021 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Conquered — Contributor Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700&family=Cinzel:wght@400;600&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --parchment: #f5ead6;
-    --parchment-dark: #e8d5b0;
-    --ink: #1a1208;
-    --ink-faded: #4a3c28;
-    --gold: #c9a84c;
-    --gold-bright: #e8c56a;
-    --gold-dark: #8b6914;
-    --crimson: #8b1a1a;
-    --crimson-light: #c0392b;
-    --shadow: rgba(26,18,8,0.15);
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    background-color: #0f0b06;
-    background-image:
-      radial-gradient(ellipse at 20% 20%, rgba(201,168,76,0.06) 0%, transparent 60%),
-      radial-gradient(ellipse at 80% 80%, rgba(139,26,26,0.08) 0%, transparent 60%),
-      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    font-family: 'Crimson Pro', Georgia, serif;
-    color: var(--ink);
-    min-height: 100vh;
-  }
-
-  /* ── HEADER ── */
-  .site-header {
-    text-align: center;
-    padding: 60px 20px 40px;
-    position: relative;
-  }
-
-  .site-header::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 50%; transform: translateX(-50%);
-    width: 1px; height: 40px;
-    background: linear-gradient(to bottom, transparent, var(--gold));
-  }
-
-  .crown {
-    font-size: 2.4rem;
-    margin-bottom: 12px;
-    display: block;
-    filter: drop-shadow(0 0 12px rgba(201,168,76,0.5));
-  }
-
-  .site-header h1 {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(2rem, 5vw, 3.8rem);
-    color: var(--gold);
-    letter-spacing: 0.08em;
-    line-height: 1.1;
-    text-shadow: 0 2px 20px rgba(201,168,76,0.3), 0 0 60px rgba(201,168,76,0.1);
-  }
-
-  .site-header .subtitle {
-    font-family: 'Cinzel', serif;
-    font-size: 0.85rem;
-    letter-spacing: 0.25em;
-    color: var(--gold-dark);
-    text-transform: uppercase;
-    margin-top: 10px;
-  }
-
-  .divider {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin: 28px auto;
-    max-width: 500px;
-    padding: 0 20px;
-  }
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(to right, transparent, var(--gold-dark));
-  }
-  .divider::after { background: linear-gradient(to left, transparent, var(--gold-dark)); }
-  .divider-icon { color: var(--gold); font-size: 1rem; }
-
-  .intro-text {
-    max-width: 640px;
-    margin: 0 auto;
-    color: var(--parchment-dark);
-    font-size: 1.15rem;
-    line-height: 1.75;
-    font-style: italic;
-    text-align: center;
-    padding: 0 20px;
-    opacity: 0.85;
-  }
-
-  /* ── TABS ── */
-  .tab-nav {
-    display: flex;
-    justify-content: center;
-    gap: 4px;
-    margin: 50px auto 0;
-    padding: 0 20px;
-    max-width: 800px;
-  }
-
-  .tab-btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 12px 28px;
-    border: 1px solid var(--gold-dark);
-    background: transparent;
-    color: var(--gold-dark);
-    cursor: pointer;
-    transition: all 0.25s ease;
-    position: relative;
-    outline: none;
-  }
-
-  .tab-btn:hover {
-    color: var(--gold);
-    border-color: var(--gold);
-    background: rgba(201,168,76,0.05);
-  }
-
-  .tab-btn.active {
-    background: var(--gold);
-    color: var(--ink);
-    border-color: var(--gold);
-    font-weight: 600;
-  }
-
-  /* ── MAIN CONTENT ── */
-  .main {
-    max-width: 860px;
-    margin: 0 auto;
-    padding: 0 20px 80px;
-  }
-
-  .tab-panel { display: none; }
-  .tab-panel.active { display: block; }
-
-  /* ── CARD ── */
-  .card {
-    background: var(--parchment);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23noise)' opacity='0.035'/%3E%3C/svg%3E");
-    border: 1px solid var(--gold-dark);
-    margin-top: 32px;
-    position: relative;
-    box-shadow: 0 4px 40px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.3);
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    inset: 4px;
-    border: 1px solid rgba(201,168,76,0.2);
-    pointer-events: none;
-  }
-
-  .card-header {
-    padding: 28px 36px 20px;
-    border-bottom: 1px solid var(--parchment-dark);
-    display: flex;
-    align-items: center;
-    gap: 14px;
-  }
-
-  .card-header-icon {
-    font-size: 1.5rem;
-    opacity: 0.7;
-  }
-
-  .card-header h2 {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    letter-spacing: 0.12em;
-    color: var(--ink-faded);
-    text-transform: uppercase;
-  }
-
-  .card-body { padding: 32px 36px; }
-
-  /* ── FORM ELEMENTS ── */
-  .form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 22px;
-  }
-  .form-grid.full { grid-template-columns: 1fr; }
-  .form-grid .span-2 { grid-column: span 2; }
-
-  .field { display: flex; flex-direction: column; gap: 7px; }
-
-  label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--ink-faded);
-  }
-
-  label .hint {
-    font-family: 'Crimson Pro', serif;
-    font-style: italic;
-    text-transform: none;
-    letter-spacing: 0;
-    font-size: 0.8rem;
-    color: #8a7355;
-    display: block;
-    margin-top: 2px;
-  }
-
-  input[type="text"],
-  input[type="number"],
-  input[type="email"],
-  select,
-  textarea {
-    background: rgba(255,255,255,0.5);
-    border: 1px solid var(--parchment-dark);
-    border-bottom: 2px solid var(--gold-dark);
-    padding: 10px 14px;
-    font-family: 'Crimson Pro', serif;
-    font-size: 1rem;
-    color: var(--ink);
-    outline: none;
-    transition: border-color 0.2s, background 0.2s;
-    width: 100%;
-  }
-
-  input:focus, select:focus, textarea:focus {
-    border-color: var(--gold);
-    background: rgba(255,255,255,0.75);
-    box-shadow: 0 2px 12px rgba(201,168,76,0.15);
-  }
-
-  textarea { resize: vertical; min-height: 90px; line-height: 1.6; }
-
-  select { cursor: pointer; }
-  select option { background: var(--parchment); }
-
-  /* ── STAT SLIDERS ── */
-  .stats-section {
-    grid-column: span 2;
-  }
-
-  .stats-label-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 16px;
-  }
-
-  .stats-total {
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-  }
-
-  .stats-total .count {
-    font-size: 1.1rem;
-    font-weight: 600;
-    transition: color 0.2s;
-  }
-  .stats-total .count.ok { color: #4a7c4e; }
-  .stats-total .count.over { color: var(--crimson); }
-  .stats-total .count.under { color: var(--gold-dark); }
-
-  .stat-row {
-    display: grid;
-    grid-template-columns: 110px 1fr 36px;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 14px;
-  }
-
-  .stat-name {
-    font-family: 'Cinzel', serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--ink-faded);
-  }
-
-  input[type="range"] {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    height: 4px;
-    background: var(--parchment-dark);
-    border: none;
-    outline: none;
-    cursor: pointer;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px; height: 18px;
-    border-radius: 50%;
-    background: var(--gold);
-    border: 2px solid var(--gold-dark);
-    cursor: pointer;
-    transition: transform 0.15s;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.3);
-  }
-
-  input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
-
-  .stat-val {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--gold-dark);
-    text-align: center;
-  }
-
-  /* ── SECTION DIVIDER IN FORM ── */
-  .form-section-title {
-    grid-column: span 2;
-    font-family: 'Cinzel', serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold-dark);
-    padding: 18px 0 6px;
-    border-top: 1px solid var(--parchment-dark);
-    margin-top: 8px;
-  }
-
-  /* ── SUBMIT BUTTON ── */
-  .btn-primary {
-    font-family: 'Cinzel', serif;
-    font-size: 0.8rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    padding: 15px 44px;
-    background: var(--gold);
-    color: var(--ink);
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-    position: relative;
-    transition: all 0.2s ease;
-    box-shadow: 0 2px 16px rgba(201,168,76,0.3);
-    display: block;
-    margin: 36px auto 0;
-  }
-
-  .btn-primary::before {
-    content: '';
-    position: absolute;
-    inset: 2px;
-    border: 1px solid rgba(255,255,255,0.3);
-    pointer-events: none;
-  }
-
-  .btn-primary:hover {
-    background: var(--gold-bright);
-    box-shadow: 0 4px 24px rgba(201,168,76,0.5);
-    transform: translateY(-1px);
-  }
-
-  .btn-primary:active { transform: translateY(0); }
-
-  /* ── SUCCESS TOAST ── */
-  .toast {
-    position: fixed;
-    bottom: 32px; left: 50%; transform: translateX(-50%) translateY(20px);
-    background: var(--ink);
-    border: 1px solid var(--gold);
-    color: var(--gold);
-    font-family: 'Cinzel', serif;
-    font-size: 0.78rem;
-    letter-spacing: 0.15em;
-    padding: 14px 32px;
-    opacity: 0;
-    transition: all 0.4s ease;
-    pointer-events: none;
-    white-space: nowrap;
-    z-index: 100;
-    box-shadow: 0 8px 40px rgba(0,0,0,0.6);
-  }
-
-  .toast.show {
-    opacity: 1;
-    transform: translateX(-50%) translateY(0);
-  }
-
-  /* ── SUBMISSIONS LOG ── */
-  .submissions-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: 40px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid rgba(201,168,76,0.3);
-  }
-
-  .submissions-header h3 {
-    font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold-dark);
-  }
-
-  .clear-btn {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    color: var(--crimson);
-    background: none;
-    border: 1px solid var(--crimson);
-    padding: 5px 14px;
-    cursor: pointer;
-    opacity: 0.6;
-    transition: opacity 0.2s;
-  }
-  .clear-btn:hover { opacity: 1; }
-
-  .submission-card {
-    background: rgba(245,234,214,0.06);
-    border: 1px solid rgba(201,168,76,0.2);
-    padding: 20px 24px;
-    margin-top: 14px;
-    position: relative;
-    animation: fadeIn 0.4s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .submission-card .s-type {
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--gold-dark);
-    margin-bottom: 4px;
-  }
-
-  .submission-card .s-name {
-    font-family: 'Cinzel', serif;
-    font-size: 1rem;
-    color: var(--parchment);
-    margin-bottom: 8px;
-  }
-
-  .submission-card .s-meta {
-    font-size: 0.85rem;
-    color: rgba(245,234,214,0.5);
-    font-style: italic;
-  }
-
-  .submission-card .s-by {
-    position: absolute;
-    top: 20px; right: 20px;
-    font-family: 'Cinzel', serif;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    color: rgba(201,168,76,0.5);
-  }
-
-  .no-submissions {
-    text-align: center;
-    color: rgba(245,234,214,0.25);
-    font-style: italic;
-    font-size: 0.95rem;
-    padding: 40px 0;
-  }
-
-  /* ── EVENT TYPE TOGGLE ── */
-  .type-toggle {
-    display: flex;
-    gap: 0;
-    border: 1px solid var(--parchment-dark);
-    overflow: hidden;
-    align-self: flex-start;
-  }
-
-  .type-toggle input { display: none; }
-
-  .type-toggle label {
-    font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 9px 20px;
-    cursor: pointer;
-    color: var(--ink-faded);
-    background: rgba(255,255,255,0.3);
-    transition: all 0.2s;
-    border: none;
-  }
-
-  .type-toggle input:checked + label {
-    background: var(--gold-dark);
-    color: var(--parchment);
-  }
-
-  /* ── CONDITIONAL FIELDS ── */
-  .conditional { display: none; }
-  .conditional.visible { display: contents; }
-
-  /* ── HELP CALLOUT ── */
-  .help-callout {
-    background: rgba(201,168,76,0.08);
-    border-left: 3px solid var(--gold-dark);
-    padding: 16px 20px;
-    margin-top: 20px;
-    font-size: 0.9rem;
-    color: var(--parchment-dark);
-    line-height: 1.65;
-    font-style: italic;
-  }
-
-  .help-callout strong {
-    font-style: normal;
-    color: var(--gold-dark);
-    font-family: 'Cinzel', serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    display: block;
-    margin-bottom: 6px;
-  }
-
-  /* ── RESPONSIVE ── */
-  @media (max-width: 600px) {
-    .form-grid { grid-template-columns: 1fr; }
-    .form-grid .span-2, .stats-section, .form-section-title { grid-column: span 1; }
-    .card-body, .card-header { padding: 22px 20px; }
-    .tab-btn { padding: 10px 16px; font-size: 0.68rem; }
-    .stat-row { grid-template-columns: 90px 1fr 30px; }
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Conquered — Contributor Portal</title>
+  <style>
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e8c97a;
+      --gold-dim: #8a6e2f;
+      --bg: #0d0b07;
+      --bg-card: #13100a;
+      --bg-section: #1a1510;
+      --border: #2e2416;
+      --text: #d4c9a8;
+      --text-dim: #8a7d5a;
+      --red: #8b2020;
+      --green: #1e5c2a;
+      --green-light: #2a7a38;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .header {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+      border-bottom: 1px solid var(--border);
+      background: radial-gradient(ellipse at top, #1e1808 0%, var(--bg) 70%);
+    }
+    .header .crown { font-size: 2rem; display: block; margin-bottom: .5rem; }
+    .header h1 { font-size: 2.8rem; color: var(--gold); letter-spacing: .15em; text-transform: uppercase; }
+    .header .subtitle { color: var(--text-dim); font-style: italic; margin: .4rem 0 1rem; letter-spacing: .08em; }
+    .header .divider { color: var(--gold-dim); font-size: .8rem; letter-spacing: .4em; }
+    .header .tagline { margin-top: .8rem; color: var(--text-dim); font-size: .9rem; max-width: 480px; margin-inline: auto; line-height: 1.6; }
+
+    /* ── Tabs ── */
+    .tabs {
+      display: flex;
+      justify-content: center;
+      gap: 0;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-card);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .tab-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-family: 'Georgia', serif;
+      font-size: .9rem;
+      padding: 1rem 1.8rem;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      transition: all .2s;
+      letter-spacing: .05em;
+    }
+    .tab-btn:hover { color: var(--gold-light); }
+    .tab-btn.active { color: var(--gold); border-bottom-color: var(--gold); }
+
+    /* ── Main layout ── */
+    .container { max-width: 760px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+    /* ── Section intro ── */
+    .section-intro {
+      background: var(--bg-section);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 2rem;
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+    .section-intro .icon { font-size: 2rem; flex-shrink: 0; }
+    .section-intro strong { color: var(--gold-light); display: block; margin-bottom: .3rem; }
+    .section-intro p { color: var(--text-dim); font-size: .9rem; line-height: 1.6; font-style: italic; }
+
+    /* ── Form card ── */
+    .form-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem;
+    }
+    .form-card h2 {
+      color: var(--gold);
+      font-size: 1.3rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      padding-bottom: .8rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* ── Field groups ── */
+    .field { margin-bottom: 1.4rem; }
+    .field label {
+      display: block;
+      color: var(--gold-light);
+      font-size: .8rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      margin-bottom: .4rem;
+    }
+    .field .hint {
+      font-size: .78rem;
+      color: var(--text-dim);
+      font-style: italic;
+      margin-bottom: .4rem;
+      display: block;
+    }
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      background: #0d0b07;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text);
+      font-family: 'Georgia', serif;
+      font-size: .95rem;
+      padding: .6rem .8rem;
+      transition: border-color .2s;
+    }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      outline: none;
+      border-color: var(--gold-dim);
+    }
+    .field textarea { resize: vertical; min-height: 70px; }
+    .field select option { background: #1a1510; }
+
+    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+    /* ── Stats block ── */
+    .stats-block {
+      background: #0d0b07;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.2rem;
+      margin-bottom: 1.4rem;
+    }
+    .stats-block .stats-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .stats-block .stats-label { color: var(--gold-light); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; }
+    .stats-total {
+      font-size: .85rem;
+      padding: .3rem .8rem;
+      border-radius: 20px;
+      background: var(--bg-section);
+      border: 1px solid var(--border);
+    }
+    .stats-total.ok { color: #4caf50; border-color: #2a5c2e; }
+    .stats-total.over { color: #e05252; border-color: #5c2a2a; }
+    .stats-total.under { color: var(--gold); }
+
+    .stat-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: .7rem;
+    }
+    .stat-row:last-child { margin-bottom: 0; }
+    .stat-row .stat-label { flex: 1; font-size: .9rem; color: var(--text-dim); }
+    .stat-controls { display: flex; align-items: center; gap: .5rem; }
+    .stat-btn {
+      width: 28px; height: 28px;
+      background: var(--bg-section);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--gold);
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: background .15s;
+      font-family: monospace;
+    }
+    .stat-btn:hover { background: #2a2010; }
+    .stat-value { min-width: 24px; text-align: center; font-size: 1rem; color: var(--text); }
+
+    /* ── Section divider ── */
+    .section-divider {
+      color: var(--gold-dim);
+      font-size: .75rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      text-align: center;
+      margin: 1.5rem 0 1rem;
+      position: relative;
+    }
+    .section-divider::before,
+    .section-divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 30%;
+      height: 1px;
+      background: var(--border);
+    }
+    .section-divider::before { left: 0; }
+    .section-divider::after { right: 0; }
+
+    /* ── Radio group ── */
+    .radio-group { display: flex; flex-direction: column; gap: .5rem; }
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: .6rem;
+      color: var(--text);
+      font-size: .9rem;
+      cursor: pointer;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .radio-group input[type="radio"] { accent-color: var(--gold); }
+
+    /* ── Submit button ── */
+    .submit-btn {
+      display: block;
+      width: 100%;
+      padding: .9rem;
+      margin-top: 1.5rem;
+      background: linear-gradient(135deg, #3a2a0a, #1e1508);
+      border: 1px solid var(--gold-dim);
+      border-radius: 6px;
+      color: var(--gold);
+      font-family: 'Georgia', serif;
+      font-size: 1rem;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .submit-btn:hover { background: linear-gradient(135deg, #4a3510, #2a1e0a); border-color: var(--gold); }
+    .submit-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+    /* ── Toast ── */
+    #toast {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #1e3a22;
+      border: 1px solid #2a6632;
+      color: #7dcc8a;
+      padding: .8rem 1.6rem;
+      border-radius: 6px;
+      font-size: .9rem;
+      letter-spacing: .05em;
+      transition: transform .3s ease;
+      z-index: 999;
+    }
+    #toast.show { transform: translateX(-50%) translateY(0); }
+    #toast.error { background: #3a1e1e; border-color: #662a2a; color: #cc7d7d; }
+
+    /* ── Submissions tab ── */
+    .submissions-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      gap: .8rem;
+    }
+    .submissions-header h2 { color: var(--gold); font-size: 1.2rem; letter-spacing: .08em; }
+    .submissions-actions { display: flex; gap: .6rem; flex-wrap: wrap; }
+
+    .action-btn {
+      background: var(--bg-section);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--text-dim);
+      font-family: 'Georgia', serif;
+      font-size: .8rem;
+      padding: .4rem .9rem;
+      cursor: pointer;
+      transition: all .2s;
+      letter-spacing: .05em;
+    }
+    .action-btn:hover { color: var(--gold-light); border-color: var(--gold-dim); }
+    .action-btn.danger:hover { color: #e05252; border-color: #5c2a2a; }
+
+    .submissions-filter {
+      display: flex;
+      gap: .5rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+    .filter-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      color: var(--text-dim);
+      font-family: 'Georgia', serif;
+      font-size: .8rem;
+      padding: .3rem .9rem;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .filter-btn.active { background: var(--bg-section); color: var(--gold); border-color: var(--gold-dim); }
+
+    .loading-msg { color: var(--text-dim); font-style: italic; text-align: center; padding: 2rem; }
+
+    .submission-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.2rem 1.5rem;
+      margin-bottom: 1rem;
+      position: relative;
+    }
+    .submission-card .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: .8rem;
+      gap: 1rem;
+    }
+    .submission-card .card-title { color: var(--gold); font-size: 1.05rem; }
+    .submission-card .card-type {
+      font-size: .7rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      padding: .2rem .6rem;
+      border-radius: 20px;
+      background: var(--bg-section);
+      border: 1px solid var(--border);
+      color: var(--text-dim);
+      white-space: nowrap;
+    }
+    .submission-card .card-type.empire { color: #c97a3a; border-color: #5c3010; }
+    .submission-card .card-type.anchor { color: #3a7ac9; border-color: #10305c; }
+    .submission-card .card-type.ripple { color: #3ac97a; border-color: #10503a; }
+
+    .submission-card .card-meta { color: var(--text-dim); font-size: .8rem; margin-bottom: .8rem; font-style: italic; }
+    .submission-card .card-body { font-size: .88rem; line-height: 1.7; color: var(--text); }
+    .submission-card .card-body .field-line { margin-bottom: .3rem; }
+    .submission-card .card-body .field-line strong { color: var(--gold-light); margin-right: .4rem; }
+
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--text-dim);
+      font-style: italic;
+      border: 1px dashed var(--border);
+      border-radius: 8px;
+    }
+    .empty-state .empty-icon { font-size: 2rem; display: block; margin-bottom: .8rem; }
+
+    /* ── Tab panel ── */
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ── Firebase status indicator ── */
+    .db-status {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      font-size: .75rem;
+      color: var(--text-dim);
+      justify-content: flex-end;
+      margin-bottom: 1rem;
+    }
+    .db-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: #888;
+    }
+    .db-dot.connected { background: #4caf50; box-shadow: 0 0 5px #4caf5055; }
+    .db-dot.error { background: #e05252; }
+
+    @media (max-width: 560px) {
+      .field-row { grid-template-columns: 1fr; }
+      .tab-btn { padding: .8rem .9rem; font-size: .8rem; }
+      .header h1 { font-size: 2rem; }
+    }
+  </style>
 </head>
 <body>
 
-<header class="site-header">
+<header class="header">
   <span class="crown">♛</span>
   <h1>Conquered</h1>
   <p class="subtitle">Contributor Portal — Shape the World</p>
-  <div class="divider"><span class="divider-icon">✦</span></div>
-  <p class="intro-text">
-    Submit the empires and historical events that will define our game.
-    Your knowledge of history becomes the world we play in.
-  </p>
+  <p class="divider">✦</p>
+  <p class="tagline">Submit the empires and historical events that will define our game.<br>Your knowledge of history becomes the world we play in.</p>
 </header>
 
-<nav class="tab-nav">
-  <button class="tab-btn active" onclick="switchTab('empire')">⚔ Empire</button>
-  <button class="tab-btn" onclick="switchTab('anchor')">📅 Anchor Event</button>
-  <button class="tab-btn" onclick="switchTab('ripple')">🌊 Ripple Event</button>
-  <button class="tab-btn" onclick="switchTab('log')">📜 Submissions</button>
+<nav class="tabs">
+  <button class="tab-btn active" data-tab="empire">⚔ Empire</button>
+  <button class="tab-btn" data-tab="anchor">📅 Anchor Event</button>
+  <button class="tab-btn" data-tab="ripple">🌊 Ripple Event</button>
+  <button class="tab-btn" data-tab="submissions">📜 Submissions</button>
 </nav>
 
-<main class="main">
+<div id="toast"></div>
 
-  <!-- ═══ EMPIRE TAB ═══ -->
-  <div class="tab-panel active" id="panel-empire">
-    <div class="help-callout">
-      <strong>What is an Empire?</strong>
-      One of the great powers players can choose to control. Focus on getting the <em>character</em> right — the feel of how this empire governed. We'll balance the numbers together.
+<!-- ════════════════════════════════ EMPIRE TAB ════════════════════════════════ -->
+<div class="tab-panel active" id="tab-empire">
+  <div class="container">
+    <div class="section-intro">
+      <span class="icon">🏛</span>
+      <div>
+        <strong>What is an Empire?</strong>
+        <p>One of the great powers players can choose to control. Focus on getting the <em>character</em> right — the feel of how this empire governed. We'll balance the numbers together.</p>
+      </div>
     </div>
 
-    <div class="card">
-      <div class="card-header">
-        <span class="card-header-icon">🏛</span>
-        <h2>Empire Submission</h2>
+    <div class="form-card">
+      <h2>🏛 Empire Submission</h2>
+
+      <div class="field">
+        <label>Your Name</label>
+        <span class="hint">So we know who submitted this</span>
+        <input type="text" id="e-author" placeholder="e.g. Marcus" />
       </div>
-      <div class="card-body">
-        <form id="empire-form">
-          <div class="form-grid">
 
-            <div class="field">
-              <label>Your Name <span class="hint">So we know who submitted this</span></label>
-              <input type="text" id="e-author" placeholder="e.g. Marcus" required>
-            </div>
+      <div class="field">
+        <label>Empire Name</label>
+        <input type="text" id="e-name" placeholder="e.g. The Byzantine Empire" />
+      </div>
 
-            <div class="field">
-              <label>Empire Name</label>
-              <input type="text" id="e-name" placeholder="e.g. The Abbasid Caliphate" required>
-            </div>
+      <div class="field-row">
+        <div class="field">
+          <label>Active From</label>
+          <span class="hint">Approximate start year</span>
+          <input type="number" id="e-from" placeholder="e.g. 330" />
+        </div>
+        <div class="field">
+          <label>Active Until</label>
+          <span class="hint">Approximate end year</span>
+          <input type="number" id="e-until" placeholder="e.g. 1453" />
+        </div>
+      </div>
 
-            <div class="field">
-              <label>Active From <span class="hint">Approximate start year</span></label>
-              <input type="number" id="e-from" placeholder="e.g. 750" min="-500" max="1900">
-            </div>
+      <div class="field">
+        <label>Home Regions</label>
+        <span class="hint">1–3 regions that were the historical heartland</span>
+        <input type="text" id="e-regions" placeholder="e.g. Anatolia, Balkans, Levant" />
+      </div>
 
-            <div class="field">
-              <label>Active Until <span class="hint">Approximate end year</span></label>
-              <input type="number" id="e-to" placeholder="e.g. 1258" min="-500" max="1900">
-            </div>
+      <div class="field">
+        <label>Governing Philosophy</label>
+        <span class="hint">One sentence — what made this empire distinct in how it ruled?</span>
+        <textarea id="e-philosophy" rows="2" placeholder="e.g. A bureaucratic theocracy that fused Roman law with Orthodox Christianity to create an intensely centralised state."></textarea>
+      </div>
 
-            <div class="field span-2">
-              <label>Home Regions <span class="hint">1–3 regions that were the historical heartland</span></label>
-              <input type="text" id="e-home" placeholder="e.g. Baghdad, Mesopotamia, western Persia">
-            </div>
-
-            <div class="field span-2">
-              <label>Governing Philosophy <span class="hint">One sentence — what made this empire distinct in how it ruled?</span></label>
-              <textarea id="e-philosophy" rows="2" placeholder="e.g. A cosmopolitan empire that turned conquered knowledge into civilizational power."></textarea>
-            </div>
-
-            <!-- STATS -->
-            <div class="stats-section">
-              <div class="stats-label-row">
-                <label style="margin:0">Base Stats
-                  <span class="hint">Distribute exactly 14 points across all four</span>
-                </label>
-                <div class="stats-total">Total: <span class="count under" id="stat-total">8</span> / 14</div>
-              </div>
-
-              <div class="stat-row">
-                <span class="stat-name">⚔ Military</span>
-                <input type="range" min="1" max="5" value="2" id="s-military" oninput="updateStats()">
-                <span class="stat-val" id="v-military">2</span>
-              </div>
-              <div class="stat-row">
-                <span class="stat-name">💰 Economy</span>
-                <input type="range" min="1" max="5" value="2" id="s-economy" oninput="updateStats()">
-                <span class="stat-val" id="v-economy">2</span>
-              </div>
-              <div class="stat-row">
-                <span class="stat-name">🎭 Culture</span>
-                <input type="range" min="1" max="5" value="2" id="s-culture" oninput="updateStats()">
-                <span class="stat-val" id="v-culture">2</span>
-              </div>
-              <div class="stat-row">
-                <span class="stat-name">🤝 Diplomacy</span>
-                <input type="range" min="1" max="5" value="2" id="s-diplomacy" oninput="updateStats()">
-                <span class="stat-val" id="v-diplomacy">2</span>
-              </div>
-            </div>
-
-            <div class="form-section-title">Abilities</div>
-
-            <div class="field span-2">
-              <label>Passive Ability <span class="hint">Always active — reflects the empire's governing style. Plain English, we'll convert it.</span></label>
-              <textarea id="e-passive" rows="3" placeholder="e.g. Territories near major rivers produce extra Food. OR: This empire never loses Legitimacy for making trade deals."></textarea>
-            </div>
-
-            <div class="field span-2">
-              <label>Active Ability <span class="hint">Usable once every 5 turns — a powerful historical strength or strategy.</span></label>
-              <textarea id="e-active" rows="3" placeholder="e.g. Send scholars to a territory — assimilation doubles there for 3 turns."></textarea>
-            </div>
-
-            <div class="form-section-title">Historical Context</div>
-
-            <div class="field span-2">
-              <label>Cultural Affinity <span class="hint">Which regions would people most naturally accept this empire's rule?</span></label>
-              <textarea id="e-affinity" rows="2" placeholder="e.g. Middle Eastern and North African regions; some Persian territories. Low affinity for Northern Europe."></textarea>
-            </div>
-
-            <div class="field span-2">
-              <label>Collapse Flavour Text <span class="hint">Optional — shown if this empire falls. Make it dramatic.</span></label>
-              <input type="text" id="e-collapse" placeholder='e.g. "The libraries of Baghdad are ash. The golden age is over."'>
-            </div>
-
-            <div class="field span-2">
-              <label>Historical Notes <span class="hint">Anything quirky, specific, or important that should influence mechanics.</span></label>
-              <textarea id="e-notes" rows="3" placeholder="Famous policies, governing innovations, historical rivalries, collapse reasons — anything you think should matter in the game."></textarea>
-            </div>
-
+      <!-- Stats -->
+      <div class="stats-block">
+        <div class="stats-header">
+          <span class="stats-label">Base Stats — distribute exactly 14 points</span>
+          <span class="stats-total under" id="stats-total-display">Total: 8 / 14</span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">⚔ Military</span>
+          <div class="stat-controls">
+            <button class="stat-btn" onclick="adjustStat('military', -1)">−</button>
+            <span class="stat-value" id="stat-military">2</span>
+            <button class="stat-btn" onclick="adjustStat('military', 1)">+</button>
           </div>
-
-          <button type="button" class="btn-primary" onclick="submitEmpire()">✦ Submit Empire ✦</button>
-        </form>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">💰 Economy</span>
+          <div class="stat-controls">
+            <button class="stat-btn" onclick="adjustStat('economy', -1)">−</button>
+            <span class="stat-value" id="stat-economy">2</span>
+            <button class="stat-btn" onclick="adjustStat('economy', 1)">+</button>
+          </div>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">🎭 Culture</span>
+          <div class="stat-controls">
+            <button class="stat-btn" onclick="adjustStat('culture', -1)">−</button>
+            <span class="stat-value" id="stat-culture">2</span>
+            <button class="stat-btn" onclick="adjustStat('culture', 1)">+</button>
+          </div>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">🤝 Diplomacy</span>
+          <div class="stat-controls">
+            <button class="stat-btn" onclick="adjustStat('diplomacy', -1)">−</button>
+            <span class="stat-value" id="stat-diplomacy">2</span>
+            <button class="stat-btn" onclick="adjustStat('diplomacy', 1)">+</button>
+          </div>
+        </div>
       </div>
+
+      <div class="section-divider">Abilities</div>
+
+      <div class="field">
+        <label>Passive Ability</label>
+        <span class="hint">Always active — reflects the empire's governing style. Plain English, we'll convert it.</span>
+        <textarea id="e-passive" rows="2" placeholder="e.g. Gains +1 Culture in any region with a cathedral or monastery."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Active Ability</label>
+        <span class="hint">Usable once every 5 turns — a powerful historical strength or strategy.</span>
+        <textarea id="e-active" rows="2" placeholder="e.g. Greek Fire: destroy one naval unit in an adjacent sea zone without engaging in battle."></textarea>
+      </div>
+
+      <div class="section-divider">Historical Context</div>
+
+      <div class="field">
+        <label>Cultural Affinity</label>
+        <span class="hint">Which regions would people most naturally accept this empire's rule?</span>
+        <input type="text" id="e-affinity" placeholder="e.g. Orthodox Christian regions, former Roman provinces" />
+      </div>
+
+      <div class="field">
+        <label>Collapse Flavour Text</label>
+        <span class="hint">Optional — shown if this empire falls. Make it dramatic.</span>
+        <textarea id="e-collapse" rows="2" placeholder="e.g. The last emperor died with his purple boots on, fighting at the Kerkoporta gate as the janissaries flooded in."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Historical Notes</label>
+        <span class="hint">Anything quirky, specific, or important that should influence mechanics.</span>
+        <textarea id="e-notes" rows="3" placeholder="e.g. The Byzantine bureaucracy was notoriously complex — might warrant a debuff when expanding too fast."></textarea>
+      </div>
+
+      <button class="submit-btn" id="submit-empire" onclick="submitEmpire()">✦ Submit Empire ✦</button>
     </div>
   </div>
+</div>
 
-  <!-- ═══ ANCHOR EVENT TAB ═══ -->
-  <div class="tab-panel" id="panel-anchor">
-    <div class="help-callout">
-      <strong>What is an Anchor Event?</strong>
-      A real historical event tied to a specific year — plague, invention, religious movement, climate shift. It fires automatically when the game reaches that year, regardless of what players have been doing.
-    </div>
-
-    <div class="card">
-      <div class="card-header">
-        <span class="card-header-icon">📅</span>
-        <h2>Anchor Event Submission</h2>
-      </div>
-      <div class="card-body">
-        <form id="anchor-form">
-          <div class="form-grid">
-
-            <div class="field">
-              <label>Your Name</label>
-              <input type="text" id="a-author" placeholder="e.g. Sofia" required>
-            </div>
-
-            <div class="field">
-              <label>Event Name</label>
-              <input type="text" id="a-name" placeholder="e.g. The Black Death" required>
-            </div>
-
-            <div class="field">
-              <label>Year <span class="hint">When did this happen?</span></label>
-              <input type="number" id="a-year" placeholder="e.g. 1347" min="-500" max="1900">
-            </div>
-
-            <div class="field">
-              <label>Who Is Affected</label>
-              <select id="a-scope">
-                <option value="all">All empires equally</option>
-                <option value="regional">Only empires in certain regions</option>
-                <option value="large">Only empires above a size threshold</option>
-                <option value="specific">Specific empire types</option>
-              </select>
-            </div>
-
-            <div class="field span-2">
-              <label>Historical Description <span class="hint">1–2 sentences shown to players when the event fires</span></label>
-              <textarea id="a-description" rows="3" placeholder="e.g. The plague swept through Europe and the Middle East, killing up to a third of the population and destabilising the world for a generation."></textarea>
-            </div>
-
-            <div class="field span-2">
-              <label>Game Effect <span class="hint">What does this do? Be specific about who, what, and for how long. Plain English.</span></label>
-              <textarea id="a-effect" rows="4" placeholder="e.g. All empires with at least one Large Population territory lose 30% Food output for 2 turns. Resistance increases by 1 in all Occupied territories."></textarea>
-            </div>
-
-            <div class="field span-2">
-              <label>Who Benefits / Suffers More <span class="hint">Optional — if historically some empires were hit harder or spared</span></label>
-              <textarea id="a-differential" rows="2" placeholder="e.g. Empires in sub-Saharan Africa and East Asia are unaffected. Maritime empires suffer additional trade route disruption."></textarea>
-            </div>
-
-            <div class="field span-2">
-              <label>Flavour Quote <span class="hint">Optional — a short atmospheric line displayed with the event</span></label>
-              <input type="text" id="a-flavour" placeholder='e.g. "The plague does not respect borders."'>
-            </div>
-
-          </div>
-
-          <button type="button" class="btn-primary" onclick="submitAnchor()">✦ Submit Anchor Event ✦</button>
-        </form>
+<!-- ════════════════════════════════ ANCHOR TAB ════════════════════════════════ -->
+<div class="tab-panel" id="tab-anchor">
+  <div class="container">
+    <div class="section-intro">
+      <span class="icon">📅</span>
+      <div>
+        <strong>What is an Anchor Event?</strong>
+        <p>A real historical event tied to a specific year — plague, invention, religious movement, climate shift. It fires automatically when the game reaches that year, regardless of what players have been doing.</p>
       </div>
     </div>
-  </div>
 
-  <!-- ═══ RIPPLE EVENT TAB ═══ -->
-  <div class="tab-panel" id="panel-ripple">
-    <div class="help-callout">
-      <strong>What is a Ripple Event?</strong>
-      Not tied to a year — triggered when a specific condition occurs during gameplay. These represent historical patterns: overextension, cultural diffusion, economic collapse. They should feel like <em>consequences</em>, not punishments.
-    </div>
+    <div class="form-card">
+      <h2>📅 Anchor Event Submission</h2>
 
-    <div class="card">
-      <div class="card-header">
-        <span class="card-header-icon">🌊</span>
-        <h2>Ripple Event Submission</h2>
+      <div class="field">
+        <label>Your Name</label>
+        <input type="text" id="a-author" placeholder="e.g. Marcus" />
       </div>
-      <div class="card-body">
-        <form id="ripple-form">
-          <div class="form-grid">
 
-            <div class="field">
-              <label>Your Name</label>
-              <input type="text" id="r-author" placeholder="e.g. Lena" required>
-            </div>
-
-            <div class="field">
-              <label>Event Name</label>
-              <input type="text" id="r-name" placeholder="e.g. Overextension Crisis" required>
-            </div>
-
-            <div class="field span-2">
-              <label>Trigger Condition <span class="hint">What game state causes this to fire? Plain English — we'll handle the logic.</span></label>
-              <textarea id="r-trigger" rows="3" placeholder="e.g. Any empire controls more than 12 territories AND has at least 4 of them still Occupied (not yet Integrated)."></textarea>
-            </div>
-
-            <div class="field span-2">
-              <label>Historical Reasoning <span class="hint">Why does this make sense historically? Helps us verify the logic.</span></label>
-              <textarea id="r-reasoning" rows="2" placeholder="e.g. Every empire that collapsed too fast did so because it conquered faster than it could govern — Rome, the Mongols, Alexander all followed this pattern."></textarea>
-            </div>
-
-            <div class="field span-2">
-              <label>Game Effect <span class="hint">What happens when this fires? Be specific about who and what.</span></label>
-              <textarea id="r-effect" rows="4" placeholder="e.g. The affected empire loses 1 Action Point next turn. All their Occupied territories gain +1 Resistance."></textarea>
-            </div>
-
-            <div class="field">
-              <label>Who Is Affected</label>
-              <select id="r-scope">
-                <option value="trigger">Only the empire that triggered it</option>
-                <option value="all">All empires</option>
-                <option value="neighbours">Neighbouring empires</option>
-                <option value="others">All empires EXCEPT the trigger</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label>How Often Can It Fire</label>
-              <select id="r-frequency">
-                <option value="once">Once per game</option>
-                <option value="per-empire">Once per empire per game</option>
-                <option value="every-turn">Every turn the condition is met</option>
-                <option value="cooldown">Once every 3 turns</option>
-              </select>
-            </div>
-
-            <div class="field span-2">
-              <label>Flavour Quote <span class="hint">Optional — shown when this fires</span></label>
-              <input type="text" id="r-flavour" placeholder='e.g. "An empire too large to govern is an empire already falling."'>
-            </div>
-
-          </div>
-
-          <button type="button" class="btn-primary" onclick="submitRipple()">✦ Submit Ripple Event ✦</button>
-        </form>
+      <div class="field">
+        <label>Event Name</label>
+        <input type="text" id="a-name" placeholder="e.g. The Black Death" />
       </div>
+
+      <div class="field">
+        <label>Year</label>
+        <span class="hint">When did this happen?</span>
+        <input type="number" id="a-year" placeholder="e.g. 1347" />
+      </div>
+
+      <div class="field">
+        <label>Who Is Affected</label>
+        <div class="radio-group">
+          <label><input type="radio" name="a-affected" value="All empires equally" checked /> All empires equally</label>
+          <label><input type="radio" name="a-affected" value="Only empires in certain regions" /> Only empires in certain regions</label>
+          <label><input type="radio" name="a-affected" value="Only empires above a size threshold" /> Only empires above a size threshold</label>
+          <label><input type="radio" name="a-affected" value="Specific empire types" /> Specific empire types</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Historical Description</label>
+        <span class="hint">1–2 sentences shown to players when the event fires</span>
+        <textarea id="a-description" rows="3" placeholder="e.g. A devastating plague spreads along the Silk Road, killing a third of Europe's population within a decade."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Game Effect</label>
+        <span class="hint">What does this do? Be specific about who, what, and for how long. Plain English.</span>
+        <textarea id="a-effect" rows="3" placeholder="e.g. All empires lose 2 population in each of their regions for 3 turns. Empires with more than 5 regions lose an additional 1 economy per turn."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Who Benefits / Suffers More</label>
+        <span class="hint">Optional — if historically some empires were hit harder or spared</span>
+        <textarea id="a-differential" rows="2" placeholder="e.g. Islamic empires lose only 1 population per region (better sanitation practices). Maritime empires spread it faster."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Flavour Quote</label>
+        <span class="hint">Optional — a short atmospheric line displayed with the event</span>
+        <input type="text" id="a-quote" placeholder='e.g. "The living were not able to bury the dead." — Giovanni Boccaccio' />
+      </div>
+
+      <button class="submit-btn" id="submit-anchor" onclick="submitAnchor()">✦ Submit Anchor Event ✦</button>
     </div>
   </div>
+</div>
 
-  <!-- ═══ LOG TAB ═══ -->
-  <div class="tab-panel" id="panel-log">
+<!-- ════════════════════════════════ RIPPLE TAB ════════════════════════════════ -->
+<div class="tab-panel" id="tab-ripple">
+  <div class="container">
+    <div class="section-intro">
+      <span class="icon">🌊</span>
+      <div>
+        <strong>What is a Ripple Event?</strong>
+        <p>Not tied to a year — triggered when a specific condition occurs during gameplay. These represent historical patterns: overextension, cultural diffusion, economic collapse. They should feel like <em>consequences</em>, not punishments.</p>
+      </div>
+    </div>
+
+    <div class="form-card">
+      <h2>🌊 Ripple Event Submission</h2>
+
+      <div class="field">
+        <label>Your Name</label>
+        <input type="text" id="r-author" placeholder="e.g. Marcus" />
+      </div>
+
+      <div class="field">
+        <label>Event Name</label>
+        <input type="text" id="r-name" placeholder="e.g. Imperial Overextension" />
+      </div>
+
+      <div class="field">
+        <label>Trigger Condition</label>
+        <span class="hint">What game state causes this to fire? Plain English — we'll handle the logic.</span>
+        <textarea id="r-trigger" rows="2" placeholder="e.g. An empire controls more than 8 regions but has a Diplomacy stat below 3."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Historical Reasoning</label>
+        <span class="hint">Why does this make sense historically? Helps us verify the logic.</span>
+        <textarea id="r-reasoning" rows="2" placeholder="e.g. Large empires with poor diplomatic infrastructure historically struggled to maintain loyalty in distant provinces."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Game Effect</label>
+        <span class="hint">What happens when this fires? Be specific about who and what.</span>
+        <textarea id="r-effect" rows="3" placeholder="e.g. The triggering empire loses 1 loyalty in its 3 furthest regions from the capital. If any region drops to 0 loyalty, it becomes independent."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Who Is Affected</label>
+        <div class="radio-group">
+          <label><input type="radio" name="r-affected" value="Only the empire that triggered it" checked /> Only the empire that triggered it</label>
+          <label><input type="radio" name="r-affected" value="All empires" /> All empires</label>
+          <label><input type="radio" name="r-affected" value="Neighbouring empires" /> Neighbouring empires</label>
+          <label><input type="radio" name="r-affected" value="All empires EXCEPT the trigger" /> All empires EXCEPT the trigger</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>How Often Can It Fire</label>
+        <div class="radio-group">
+          <label><input type="radio" name="r-frequency" value="Once per game" checked /> Once per game</label>
+          <label><input type="radio" name="r-frequency" value="Once per empire per game" /> Once per empire per game</label>
+          <label><input type="radio" name="r-frequency" value="Every turn the condition is met" /> Every turn the condition is met</label>
+          <label><input type="radio" name="r-frequency" value="Once every 3 turns" /> Once every 3 turns</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Flavour Quote</label>
+        <span class="hint">Optional — shown when this fires</span>
+        <input type="text" id="r-quote" placeholder='e.g. "Whom the gods would destroy, they first make proud."' />
+      </div>
+
+      <button class="submit-btn" id="submit-ripple" onclick="submitRipple()">✦ Submit Ripple Event ✦</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════ SUBMISSIONS TAB ════════════════════════════════ -->
+<div class="tab-panel" id="tab-submissions">
+  <div class="container">
     <div class="submissions-header">
-      <h3>📜 All Submissions This Session</h3>
-      <button class="clear-btn" onclick="clearLog()">Clear All</button>
+      <h2>📜 All Submissions</h2>
+      <div class="submissions-actions">
+        <button class="action-btn" onclick="exportJSON()">⬇ Export JSON</button>
+      </div>
     </div>
-    <div id="submission-log">
-      <p class="no-submissions">No submissions yet. Be the first to shape the world.</p>
+
+    <div class="db-status">
+      <span class="db-dot" id="db-dot"></span>
+      <span id="db-status-text">Connecting…</span>
     </div>
-    <div style="margin-top:32px; text-align:center;">
-      <button class="btn-primary" onclick="exportJSON()" style="margin:0 auto; font-size:0.72rem;">⬇ Export as JSON for Dev Team</button>
+
+    <div class="submissions-filter">
+      <button class="filter-btn active" data-filter="all" onclick="setFilter('all', this)">All</button>
+      <button class="filter-btn" data-filter="empire" onclick="setFilter('empire', this)">⚔ Empires</button>
+      <button class="filter-btn" data-filter="anchor" onclick="setFilter('anchor', this)">📅 Anchor Events</button>
+      <button class="filter-btn" data-filter="ripple" onclick="setFilter('ripple', this)">🌊 Ripple Events</button>
+    </div>
+
+    <div id="submissions-list">
+      <p class="loading-msg">Loading submissions from the database…</p>
     </div>
   </div>
+</div>
 
-</main>
+<!-- ════════════════════════════════ FIREBASE + LOGIC ════════════════════════════════ -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+  import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-database.js";
 
-<!-- Toast -->
-<div class="toast" id="toast"></div>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDN90TWwQQjQs5x99bH683JbwdngkJRV7s",
+    authDomain: "imperium-populi-1d8ec.firebaseapp.com",
+    databaseURL: "https://imperium-populi-1d8ec-default-rtdb.firebaseio.com",
+    projectId: "imperium-populi-1d8ec",
+    storageBucket: "imperium-populi-1d8ec.firebasestorage.app",
+    messagingSenderId: "490850586443",
+    appId: "1:490850586443:web:0d2cfbb560397bf3e362ce",
+    measurementId: "G-VJZJYDLN5L"
+  };
 
-<script>
-// ── STATE ──
-let submissions = JSON.parse(localStorage.getItem('conquered_submissions') || '[]');
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
 
-// ── TABS ──
-function switchTab(tab) {
-  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-  document.getElementById('panel-' + tab).classList.add('active');
-  event.target.classList.add('active');
-  if (tab === 'log') renderLog();
-}
+  // ── DB status indicator ──
+  const dbDot = document.getElementById('db-dot');
+  const dbStatusText = document.getElementById('db-status-text');
 
-// ── STATS ──
-function updateStats() {
-  const stats = ['military','economy','culture','diplomacy'];
-  let total = 0;
-  stats.forEach(s => {
-    const val = parseInt(document.getElementById('s-' + s).value);
-    document.getElementById('v-' + s).textContent = val;
-    total += val;
+  // Expose db + helpers to global scope so onclick handlers can use them
+  window._db = db;
+  window._ref = ref;
+  window._push = push;
+
+  // ── Live listener for submissions ──
+  let allSubmissions = [];
+  let currentFilter = 'all';
+
+  const submissionsRef = ref(db, 'submissions');
+  onValue(submissionsRef, (snapshot) => {
+    dbDot.classList.add('connected');
+    dbDot.classList.remove('error');
+    dbStatusText.textContent = 'Connected to database';
+
+    allSubmissions = [];
+    if (snapshot.exists()) {
+      snapshot.forEach(child => {
+        allSubmissions.push({ id: child.key, ...child.val() });
+      });
+      // Reverse so newest first
+      allSubmissions.reverse();
+    }
+    renderSubmissions();
+  }, (error) => {
+    dbDot.classList.add('error');
+    dbStatusText.textContent = 'Database error — check rules';
+    document.getElementById('submissions-list').innerHTML =
+      `<p class="loading-msg">⚠ Could not load submissions. Make sure your Firebase rules allow reads.</p>`;
   });
-  const el = document.getElementById('stat-total');
-  el.textContent = total;
-  el.className = 'count ' + (total === 14 ? 'ok' : total > 14 ? 'over' : 'under');
-}
 
-// ── SUBMIT EMPIRE ──
-function submitEmpire() {
-  const name = document.getElementById('e-name').value.trim();
-  const author = document.getElementById('e-author').value.trim();
-  if (!name || !author) { showToast('Please fill in your name and empire name.'); return; }
+  function renderSubmissions() {
+    const list = document.getElementById('submissions-list');
+    const filtered = currentFilter === 'all'
+      ? allSubmissions
+      : allSubmissions.filter(s => s.type === currentFilter);
 
-  const total = ['military','economy','culture','diplomacy']
-    .reduce((s,k) => s + parseInt(document.getElementById('s-'+k).value), 0);
-  if (total !== 14) { showToast('Stats must total exactly 14. Currently: ' + total); return; }
+    if (filtered.length === 0) {
+      list.innerHTML = `<div class="empty-state"><span class="empty-icon">📜</span>No submissions yet${currentFilter !== 'all' ? ' in this category' : ''}. Be the first to shape the world.</div>`;
+      return;
+    }
 
-  const entry = {
-    type: 'empire',
-    author,
-    name,
-    era: document.getElementById('e-from').value + '–' + document.getElementById('e-to').value,
-    home: document.getElementById('e-home').value.trim(),
-    philosophy: document.getElementById('e-philosophy').value.trim(),
-    stats: {
-      military: parseInt(document.getElementById('s-military').value),
-      economy: parseInt(document.getElementById('s-economy').value),
-      culture: parseInt(document.getElementById('s-culture').value),
-      diplomacy: parseInt(document.getElementById('s-diplomacy').value),
-    },
-    passive: document.getElementById('e-passive').value.trim(),
-    active: document.getElementById('e-active').value.trim(),
-    affinity: document.getElementById('e-affinity').value.trim(),
-    collapse: document.getElementById('e-collapse').value.trim(),
-    notes: document.getElementById('e-notes').value.trim(),
-    submitted: new Date().toISOString()
-  };
-
-  save(entry);
-  document.getElementById('empire-form').reset();
-  ['military','economy','culture','diplomacy'].forEach(s => {
-    document.getElementById('s-'+s).value = 2;
-    document.getElementById('v-'+s).textContent = 2;
-  });
-  updateStats();
-  showToast('Empire submitted — ' + name + ' enters the annals.');
-}
-
-// ── SUBMIT ANCHOR ──
-function submitAnchor() {
-  const name = document.getElementById('a-name').value.trim();
-  const author = document.getElementById('a-author').value.trim();
-  if (!name || !author) { showToast('Please fill in your name and event name.'); return; }
-
-  const entry = {
-    type: 'anchor',
-    author,
-    name,
-    year: document.getElementById('a-year').value,
-    scope: document.getElementById('a-scope').value,
-    description: document.getElementById('a-description').value.trim(),
-    effect: document.getElementById('a-effect').value.trim(),
-    differential: document.getElementById('a-differential').value.trim(),
-    flavour: document.getElementById('a-flavour').value.trim(),
-    submitted: new Date().toISOString()
-  };
-
-  save(entry);
-  document.getElementById('anchor-form').reset();
-  showToast('Anchor event recorded — ' + name + ' will shape history.');
-}
-
-// ── SUBMIT RIPPLE ──
-function submitRipple() {
-  const name = document.getElementById('r-name').value.trim();
-  const author = document.getElementById('r-author').value.trim();
-  if (!name || !author) { showToast('Please fill in your name and event name.'); return; }
-
-  const entry = {
-    type: 'ripple',
-    author,
-    name,
-    trigger: document.getElementById('r-trigger').value.trim(),
-    reasoning: document.getElementById('r-reasoning').value.trim(),
-    effect: document.getElementById('r-effect').value.trim(),
-    scope: document.getElementById('r-scope').value,
-    frequency: document.getElementById('r-frequency').value,
-    flavour: document.getElementById('r-flavour').value.trim(),
-    submitted: new Date().toISOString()
-  };
-
-  save(entry);
-  document.getElementById('ripple-form').reset();
-  showToast('Ripple event recorded — ' + name + ' ripples through the ages.');
-}
-
-// ── SAVE ──
-function save(entry) {
-  submissions.push(entry);
-  localStorage.setItem('conquered_submissions', JSON.stringify(submissions));
-}
-
-// ── RENDER LOG ──
-function renderLog() {
-  const log = document.getElementById('submission-log');
-  if (submissions.length === 0) {
-    log.innerHTML = '<p class="no-submissions">No submissions yet. Be the first to shape the world.</p>';
-    return;
+    list.innerHTML = filtered.map(s => buildCard(s)).join('');
   }
 
-  const icons = { empire: '🏛', anchor: '📅', ripple: '🌊' };
-  const labels = { empire: 'Empire', anchor: 'Anchor Event', ripple: 'Ripple Event' };
+  function buildCard(s) {
+    const typeLabel = s.type === 'empire' ? '⚔ Empire' : s.type === 'anchor' ? '📅 Anchor Event' : '🌊 Ripple Event';
+    const date = s.timestamp ? new Date(s.timestamp).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
+    let body = '';
 
-  log.innerHTML = [...submissions].reverse().map((s, i) => {
-    const year = s.era || (s.year ? s.year + ' AD' : '');
-    const meta = s.era ? `Era: ${s.era}` : s.year ? `Year: ${s.year}` : s.trigger ? `Trigger: ${s.trigger.substring(0,80)}…` : '';
+    if (s.type === 'empire') {
+      body = `
+        ${line('Empire', s.name)}
+        ${line('Submitted by', s.author)}
+        ${s.from || s.until ? line('Active', `${s.from || '?'} – ${s.until || '?'}`) : ''}
+        ${line('Home Regions', s.regions)}
+        ${line('Philosophy', s.philosophy)}
+        ${s.stats ? line('Stats', `⚔ ${s.stats.military}  💰 ${s.stats.economy}  🎭 ${s.stats.culture}  🤝 ${s.stats.diplomacy}`) : ''}
+        ${line('Passive', s.passive)}
+        ${line('Active', s.active)}
+        ${line('Cultural Affinity', s.affinity)}
+        ${line('Collapse', s.collapse)}
+        ${line('Notes', s.notes)}
+      `;
+    } else if (s.type === 'anchor') {
+      body = `
+        ${line('Event', s.name)}
+        ${line('Submitted by', s.author)}
+        ${line('Year', s.year)}
+        ${line('Who Is Affected', s.affected)}
+        ${line('Description', s.description)}
+        ${line('Game Effect', s.effect)}
+        ${line('Differential', s.differential)}
+        ${s.quote ? line('Quote', `"${s.quote}"`) : ''}
+      `;
+    } else {
+      body = `
+        ${line('Event', s.name)}
+        ${line('Submitted by', s.author)}
+        ${line('Trigger', s.trigger)}
+        ${line('Reasoning', s.reasoning)}
+        ${line('Game Effect', s.effect)}
+        ${line('Who Is Affected', s.affected)}
+        ${line('Frequency', s.frequency)}
+        ${s.quote ? line('Quote', `"${s.quote}"`) : ''}
+      `;
+    }
+
     return `
       <div class="submission-card">
-        <div class="s-type">${icons[s.type]} ${labels[s.type]}</div>
-        <div class="s-name">${s.name}</div>
-        ${meta ? `<div class="s-meta">${meta}</div>` : ''}
-        <div class="s-by">by ${s.author}</div>
-      </div>`;
-  }).join('');
-}
-
-// ── CLEAR ──
-function clearLog() {
-  if (confirm('Clear all submissions? This cannot be undone.')) {
-    submissions = [];
-    localStorage.removeItem('conquered_submissions');
-    renderLog();
+        <div class="card-header">
+          <span class="card-title">${s.name || '(unnamed)'}</span>
+          <span class="card-type ${s.type}">${typeLabel}</span>
+        </div>
+        <div class="card-meta">${s.author ? `by ${s.author}` : ''}${date ? ` · ${date}` : ''}</div>
+        <div class="card-body">${body}</div>
+      </div>
+    `;
   }
-}
 
-// ── EXPORT ──
-function exportJSON() {
-  if (submissions.length === 0) { showToast('Nothing to export yet.'); return; }
-  const blob = new Blob([JSON.stringify(submissions, null, 2)], { type: 'application/json' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'conquered-contributions-' + new Date().toISOString().slice(0,10) + '.json';
-  a.click();
-  showToast('Exported — pass the JSON to the dev team.');
-}
+  function line(label, val) {
+    if (!val && val !== 0) return '';
+    return `<div class="field-line"><strong>${label}:</strong>${val}</div>`;
+  }
 
-// ── TOAST ──
-function showToast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3000);
-}
+  window.setFilter = function(filter, btn) {
+    currentFilter = filter;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    renderSubmissions();
+  };
 
-// ── INIT ──
-updateStats();
+  window.exportJSON = function() {
+    const blob = new Blob([JSON.stringify(allSubmissions, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `conquered-submissions-${Date.now()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  // ── Toast ──
+  window.showToast = function(msg, isError = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = isError ? 'error show' : 'show';
+    setTimeout(() => t.className = '', 3000);
+  };
+
+  // ── Submit helpers ──
+  async function saveToFirebase(data) {
+    const submissionsRef = window._ref(window._db, 'submissions');
+    await window._push(submissionsRef, { ...data, timestamp: Date.now() });
+  }
+
+  // ── Empire submit ──
+  window.submitEmpire = async function() {
+    const btn = document.getElementById('submit-empire');
+    const name = document.getElementById('e-name').value.trim();
+    const author = document.getElementById('e-author').value.trim();
+    if (!name || !author) { showToast('Please fill in at least your name and the empire name.', true); return; }
+
+    const total = getStatTotal();
+    if (total !== 14) { showToast(`Stats must total exactly 14 — currently ${total}.`, true); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    try {
+      await saveToFirebase({
+        type: 'empire',
+        author,
+        name,
+        from: document.getElementById('e-from').value,
+        until: document.getElementById('e-until').value,
+        regions: document.getElementById('e-regions').value.trim(),
+        philosophy: document.getElementById('e-philosophy').value.trim(),
+        stats: {
+          military: window._stats.military,
+          economy: window._stats.economy,
+          culture: window._stats.culture,
+          diplomacy: window._stats.diplomacy,
+        },
+        passive: document.getElementById('e-passive').value.trim(),
+        active: document.getElementById('e-active').value.trim(),
+        affinity: document.getElementById('e-affinity').value.trim(),
+        collapse: document.getElementById('e-collapse').value.trim(),
+        notes: document.getElementById('e-notes').value.trim(),
+      });
+      showToast(`✦ ${name} has been recorded in the annals.`);
+      clearEmpireForm();
+    } catch(e) {
+      showToast('Failed to save — check your Firebase rules.', true);
+    }
+    btn.disabled = false;
+    btn.textContent = '✦ Submit Empire ✦';
+  };
+
+  function clearEmpireForm() {
+    ['e-author','e-name','e-from','e-until','e-regions','e-philosophy','e-passive','e-active','e-affinity','e-collapse','e-notes'].forEach(id => {
+      document.getElementById(id).value = '';
+    });
+    window._stats = { military: 2, economy: 2, culture: 2, diplomacy: 2 };
+    ['military','economy','culture','diplomacy'].forEach(s => {
+      document.getElementById('stat-' + s).textContent = 2;
+    });
+    updateStatDisplay();
+  }
+
+  // ── Anchor submit ──
+  window.submitAnchor = async function() {
+    const btn = document.getElementById('submit-anchor');
+    const name = document.getElementById('a-name').value.trim();
+    const author = document.getElementById('a-author').value.trim();
+    if (!name || !author) { showToast('Please fill in at least your name and event name.', true); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    try {
+      await saveToFirebase({
+        type: 'anchor',
+        author,
+        name,
+        year: document.getElementById('a-year').value,
+        affected: document.querySelector('input[name="a-affected"]:checked')?.value,
+        description: document.getElementById('a-description').value.trim(),
+        effect: document.getElementById('a-effect').value.trim(),
+        differential: document.getElementById('a-differential').value.trim(),
+        quote: document.getElementById('a-quote').value.trim(),
+      });
+      showToast(`✦ "${name}" shall echo through history.`);
+      ['a-author','a-name','a-year','a-description','a-effect','a-differential','a-quote'].forEach(id => document.getElementById(id).value = '');
+    } catch(e) {
+      showToast('Failed to save — check your Firebase rules.', true);
+    }
+    btn.disabled = false;
+    btn.textContent = '✦ Submit Anchor Event ✦';
+  };
+
+  // ── Ripple submit ──
+  window.submitRipple = async function() {
+    const btn = document.getElementById('submit-ripple');
+    const name = document.getElementById('r-name').value.trim();
+    const author = document.getElementById('r-author').value.trim();
+    if (!name || !author) { showToast('Please fill in at least your name and event name.', true); return; }
+
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+    try {
+      await saveToFirebase({
+        type: 'ripple',
+        author,
+        name,
+        trigger: document.getElementById('r-trigger').value.trim(),
+        reasoning: document.getElementById('r-reasoning').value.trim(),
+        effect: document.getElementById('r-effect').value.trim(),
+        affected: document.querySelector('input[name="r-affected"]:checked')?.value,
+        frequency: document.querySelector('input[name="r-frequency"]:checked')?.value,
+        quote: document.getElementById('r-quote').value.trim(),
+      });
+      showToast(`✦ "${name}" ripples through the ages.`);
+      ['r-author','r-name','r-trigger','r-reasoning','r-effect','r-quote'].forEach(id => document.getElementById(id).value = '');
+    } catch(e) {
+      showToast('Failed to save — check your Firebase rules.', true);
+    }
+    btn.disabled = false;
+    btn.textContent = '✦ Submit Ripple Event ✦';
+  };
 </script>
+
+<script>
+  // ── Tabs ──
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+    });
+  });
+
+  // ── Stats ──
+  window._stats = { military: 2, economy: 2, culture: 2, diplomacy: 2 };
+
+  function getStatTotal() {
+    return Object.values(window._stats).reduce((a, b) => a + b, 0);
+  }
+
+  function updateStatDisplay() {
+    const total = getStatTotal();
+    const el = document.getElementById('stats-total-display');
+    el.textContent = `Total: ${total} / 14`;
+    el.className = 'stats-total ' + (total === 14 ? 'ok' : total > 14 ? 'over' : 'under');
+  }
+
+  window.adjustStat = function(stat, delta) {
+    const newVal = window._stats[stat] + delta;
+    if (newVal < 0 || newVal > 10) return;
+    window._stats[stat] = newVal;
+    document.getElementById('stat-' + stat).textContent = newVal;
+    updateStatDisplay();
+  };
+</script>
+
 </body>
 </html>
