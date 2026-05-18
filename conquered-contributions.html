@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Imperium Populorum — Contributor Portal</title>h
+  <title>Imperium Populorum — Contributor Portal</title>
   <style>
     :root {
       --gold: #c9a84c;
@@ -456,7 +456,43 @@
       </div>
 
       <div class="field">
-        <label>Governing Philosophy</label>
+        <label>Continental Zone</label>
+        <span class="hint">Which zone does this empire's heartland sit in?</span>
+        <select id="e-zone">
+          <option value="">-- select a zone --</option>
+          <option value="Europe">Europe</option>
+          <option value="Americas">Americas</option>
+          <option value="Africa">Africa</option>
+          <option value="Middle_East_South_Asia">Middle East / South Asia</option>
+          <option value="East_Asia">East Asia</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Era Bracket</label>
+        <span class="hint">Tick every bracket this empire's historical lifespan overlaps</span>
+        <div class="radio-group">
+          <label><input type="checkbox" name="e-era" value="Ancient" /> Ancient (~500 BC – 500 AD)</label>
+          <label><input type="checkbox" name="e-era" value="Medieval" /> Medieval (~700 – 1300 AD)</label>
+          <label><input type="checkbox" name="e-era" value="Early_Modern" /> Early Modern (1300 – 1648 AD)</label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Governing Philosophy (mechanical)</label>
+        <span class="hint">Choose the philosophy that best captures how this empire derived its legitimacy. Materially affects gameplay — see GDD §5.2.</span>
+        <select id="e-philosophy-mechanical">
+          <option value="">-- select a philosophy --</option>
+          <option value="Sword">The Sword — legitimacy through force and order</option>
+          <option value="Pen">The Pen — legitimacy through institutions, law, learning</option>
+          <option value="Coin">The Coin — legitimacy through trade and prosperity</option>
+          <option value="Word">The Word — legitimacy through religion or ideology</option>
+          <option value="Thread">The Thread — legitimacy through diplomacy and network</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Governing Philosophy (flavour)</label>
         <span class="hint">One sentence — what made this empire distinct in how it ruled?</span>
         <textarea id="e-philosophy" rows="2" placeholder="e.g. A bureaucratic theocracy that fused Roman law with Orthodox Christianity to create an intensely centralised state."></textarea>
       </div>
@@ -876,6 +912,15 @@
     const author = document.getElementById('e-author').value.trim();
     if (!name || !author) { showToast('Please fill in at least your name and the empire name.', true); return; }
 
+    const zone = document.getElementById('e-zone').value;
+    if (!zone) { showToast('Please select a Continental Zone.', true); return; }
+
+    const philosophy_mechanical = document.getElementById('e-philosophy-mechanical').value;
+    if (!philosophy_mechanical) { showToast('Please select a Governing Philosophy (mechanical).', true); return; }
+
+    const era_bracket = Array.from(document.querySelectorAll('input[name="e-era"]:checked')).map(el => el.value);
+    if (era_bracket.length === 0) { showToast('No Era Bracket selected — consider ticking at least one.', false); }
+
     const total = getStatTotal();
     if (total !== 14) { showToast(`Stats must total exactly 14 — currently ${total}.`, true); return; }
 
@@ -889,6 +934,9 @@
         from: document.getElementById('e-from').value,
         until: document.getElementById('e-until').value,
         regions: document.getElementById('e-regions').value.trim(),
+        continental_zone: document.getElementById('e-zone').value,
+        era_bracket: Array.from(document.querySelectorAll('input[name="e-era"]:checked')).map(el => el.value),
+        governing_philosophy: document.getElementById('e-philosophy-mechanical').value,
         philosophy: document.getElementById('e-philosophy').value.trim(),
         stats: {
           military: window._stats.military,
@@ -915,6 +963,9 @@
     ['e-author','e-name','e-from','e-until','e-regions','e-philosophy','e-passive','e-active','e-affinity','e-collapse','e-notes'].forEach(id => {
       document.getElementById(id).value = '';
     });
+    document.getElementById('e-zone').value = '';
+    document.getElementById('e-philosophy-mechanical').value = '';
+    document.querySelectorAll('input[name="e-era"]').forEach(el => el.checked = false);
     window._stats = { military: 2, economy: 2, culture: 2, diplomacy: 2 };
     ['military','economy','culture','diplomacy'].forEach(s => {
       document.getElementById('stat-' + s).textContent = 2;
